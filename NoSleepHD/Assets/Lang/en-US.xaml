@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <s:String x:Key="text_open">open</s:String>
+    <s:String x:Key="text_close">close</s:String>
+
+    <s:String x:Key="text_set_startup">Set Startup</s:String>
+    <s:String x:Key="text_unset_startup">Unset Startup</s:String>
+
+    <s:String x:Key="text_nosleep_start">Start</s:String>
+    <s:String x:Key="text_nosleep_stop">Stop</s:String>
+
+    <s:String x:Key="nosleep_already_started">NoSleep already started</s:String>
+    <s:String x:Key="you_have_not_selected_any_hdd">You haven't selected any HDD</s:String>
+    <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">This is a file to prevent HDD sleep ——NoSleepHD</s:String>
+
+    <s:String x:Key="text_warning">warning</s:String>
+
+</ResourceDictionary>

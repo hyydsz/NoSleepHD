@@ -68,7 +68,7 @@ namespace NoSleepHD
             string gegistry_path = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run").GetValue("NoSleepHD", "").ToString();
             if ($"\"{path}\" --slient"  == gegistry_path)
             {
-                StartupButton.Content = "取消开机自启动";
+                StartupButton.Content = App.getStringByKey("text_unset_startup");
             }
 
             if (Started)
@@ -82,14 +82,14 @@ namespace NoSleepHD
             SetState(false);
 
             Timer.Start();
-            StateButton.Content = "停止";
+            StateButton.Content = App.getStringByKey("text_nosleep_stop");
         }
 
         private void WriteToHDD(object sender, ElapsedEventArgs e)
         {
             foreach (string a in disks)
             {
-                File.WriteAllText(a + "NoSleepHD", "这是一个防止硬盘休眠的文件 ———— NoSleepHD");
+                File.WriteAllText(a + "NoSleepHD", App.getStringByKey("this_is_a_file_to_prevent_hdd_sleep"));
             }
         }
 
@@ -160,16 +160,16 @@ namespace NoSleepHD
 
                         Timer.Stop();
 
-                        StateButton.Content = "启动";
+                        StateButton.Content = App.getStringByKey("text_nosleep_start");
                     } else {
                         if (disks.Length == 0)
                         {
-                            MessageBox.Show("您没有选择任何硬盘！", "警告", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(App.getStringByKey("you_have_not_selected_any_hdd"), App.getStringByKey("text_warning"), MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
 
                         Started = true;
-                        notifyIcon.ShowBalloonTip(string.Empty, "NoSleepHD 已经开始运行", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
+                        notifyIcon.ShowBalloonTip(string.Empty, App.getStringByKey("nosleep_already_started"), Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
 
                         StartDiskNoSleep();
                     }
@@ -185,10 +185,11 @@ namespace NoSleepHD
                     if ($"\"{path}\" --slient" == registryKey.GetValue("NoSleepHD", string.Empty).ToString())
                     {
                         registryKey.DeleteValue("NoSleepHD");
-                        StartupButton.Content = "设置开机自启动";
+                        
+                        StartupButton.Content = App.getStringByKey("text_set_startup");
                     } else {
                         registryKey.SetValue("NoSleepHD", $"\"{path}\" --slient");
-                        StartupButton.Content = "取消开机自启动";
+                        StartupButton.Content = App.getStringByKey("text_unset_startup");
                     }
 
                     break;

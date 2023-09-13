@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <s:String x:Key="text_open">打开</s:String>
+    <s:String x:Key="text_close">关闭</s:String>
+
+    <s:String x:Key="text_set_startup">设置开机自启动</s:String>
+    <s:String x:Key="text_unset_startup">取消开机自启动</s:String>
+
+    <s:String x:Key="text_nosleep_start">启动</s:String>
+    <s:String x:Key="text_nosleep_stop">停止</s:String>
+
+    <s:String x:Key="nosleep_already_started">NoSleep 已经启动</s:String>
+    <s:String x:Key="you_have_not_selected_any_hdd">你没有选择任何硬盘!</s:String>
+    <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">这是一个防止硬盘休眠的文件 ——NoSleepHD</s:String>
+    
+    <s:String x:Key="text_warning">警告</s:String>
+
+</ResourceDictionary>
