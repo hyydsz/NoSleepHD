@@ -10,7 +10,7 @@ namespace NoSleepHD
             {
                 if (arg == "--slient")
                 {
-                    (this.MainWindow as MainWindow).Started = true;
+                    NoSleepHD.MainWindow.Started = true;
                 }
             }
         }

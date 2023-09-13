@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,15 +19,20 @@ namespace NoSleepHD
 
         public static string path = System.Windows.Forms.Application.ExecutablePath;
 
+        public static bool Started = false;
+
         public string[] disks = null;
         public RegistryKey registry = Registry.CurrentUser.CreateSubKey("Software\\NoSleepHD", true);
-        public bool Started = false;
 
         private Timer Timer;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Timer = new Timer();
+            Timer.Interval = TimeSpan.FromSeconds(2.5f).Milliseconds;
+            Timer.Elapsed += WriteToHDD;
 
             Load_Registry();
             Load_SSD();
@@ -37,10 +41,6 @@ namespace NoSleepHD
             ButtonHandler = this.AllButtonHandler;
 
             DataContext = new MainCommand();
-
-            Timer = new Timer();
-            Timer.Interval = TimeSpan.FromSeconds(2.5f).Milliseconds;
-            Timer.Elapsed += WriteToHDD;
         }
 
         private void Load_SSD()
