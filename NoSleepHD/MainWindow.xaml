@@ -51,7 +51,7 @@
 
                     <Grid>
                         <Button Style="{StaticResource longButtonStyle}" Command="{Binding MyCommand}" CommandParameter="Startup" Margin="35 40 35 0" Content="设置开机自启动" x:Name="StartupButton" HorizontalAlignment="Left" Width="100"/>
-                        <Button Style="{StaticResource longButtonStyle}" Command="{Binding MyCommand}" CommandParameter="Start" Margin="35 40 35 0" Content="启动" HorizontalAlignment="Right"/>
+                        <Button Style="{StaticResource longButtonStyle}" Command="{Binding MyCommand}" CommandParameter="Start" Margin="35 40 35 0" Content="启动" x:Name="StateButton" HorizontalAlignment="Right"/>
                     </Grid>
                 </StackPanel>
             </Grid>

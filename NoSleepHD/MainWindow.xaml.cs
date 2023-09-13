@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,10 +20,11 @@ namespace NoSleepHD
 
         public static string path = System.Windows.Forms.Application.ExecutablePath;
 
-        public static string[] disks = null;
-        public static RegistryKey registry = Registry.CurrentUser.CreateSubKey("Software\\NoSleepHD", true);
+        public string[] disks = null;
+        public RegistryKey registry = Registry.CurrentUser.CreateSubKey("Software\\NoSleepHD", true);
+        public bool Started = false;
 
-        public static bool Started = false;
+        private Timer Timer;
 
         public MainWindow()
         {
@@ -35,6 +37,10 @@ namespace NoSleepHD
             ButtonHandler = this.AllButtonHandler;
 
             DataContext = new MainCommand();
+
+            Timer = new Timer();
+            Timer.Interval = TimeSpan.FromSeconds(2.5f).Milliseconds;
+            Timer.Elapsed += WriteToHDD;
         }
 
         private void Load_SSD()
@@ -43,7 +49,13 @@ namespace NoSleepHD
             {
                 if (drive.DriveType == DriveType.Fixed)
                 {
-                    SSD_Frame frame = new SSD_Frame(drive.Name);
+                    bool check = false;
+
+                    if (disks.Contains(drive.Name)) {
+                        check = true;
+                    }
+
+                    SSD_Frame frame = new SSD_Frame(drive.Name, check);
                     list_ssd.Items.Add(frame);
                 }
             }
@@ -61,8 +73,6 @@ namespace NoSleepHD
 
             if (Started)
             {
-                SetState(false);
-
                 StartDiskNoSleep();
             }
         }
@@ -71,20 +81,16 @@ namespace NoSleepHD
         {
             SetState(false);
 
-            notifyIcon.ShowBalloonTip("", "NoSleepHD 已经开始运行", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
+            Timer.Start();
+            StateButton.Content = "停止";
+        }
 
-            _ = Task.Factory.StartNew(() =>
+        private void WriteToHDD(object sender, ElapsedEventArgs e)
+        {
+            foreach (string a in disks)
             {
-                while (Started)
-                {
-                    foreach (string a in disks)
-                    {
-                        File.WriteAllText(a + "NoSleepHD", "这是一个防止硬盘休眠的文件 ———— NoSleepHD");
-                    }
-
-                    Thread.Sleep(TimeSpan.FromMinutes(2.5));
-                }
-            });
+                File.WriteAllText(a + "NoSleepHD", "这是一个防止硬盘休眠的文件 ———— NoSleepHD");
+            }
         }
 
         private void DragMove(object sender, MouseButtonEventArgs e)
@@ -122,7 +128,7 @@ namespace NoSleepHD
                 this.Visibility = Visibility.Hidden;
             }
         }
-        private void AllButtonHandler(object para)
+        private async void AllButtonHandler(object para)
         {
             switch (para)
             {
@@ -135,9 +141,7 @@ namespace NoSleepHD
                     if (Started)
                     {
                         SetState(false);
-                    }
-                    else
-                    {
+                    } else {
                         Process.GetCurrentProcess().Kill();
                     }
 
@@ -151,10 +155,13 @@ namespace NoSleepHD
                 case "Start":
                     if (Started)
                     {
-                        SetState(false);
-                    }
-                    else
-                    {
+                        SetState(true);
+                        Started = false;
+
+                        Timer.Stop();
+
+                        StateButton.Content = "启动";
+                    } else {
                         if (disks.Length == 0)
                         {
                             MessageBox.Show("您没有选择任何硬盘！", "警告", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -162,8 +169,8 @@ namespace NoSleepHD
                         }
 
                         Started = true;
+                        notifyIcon.ShowBalloonTip(string.Empty, "NoSleepHD 已经开始运行", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
 
-                        UpdateDiskList();
                         StartDiskNoSleep();
                     }
 
@@ -176,13 +183,11 @@ namespace NoSleepHD
                 case "Startup":
 
                     RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-                    if ($"\"{path}\" --slient" == registryKey.GetValue("NoSleepHD", "").ToString())
+                    if ($"\"{path}\" --slient" == registryKey.GetValue("NoSleepHD", string.Empty).ToString())
                     {
                         registryKey.DeleteValue("NoSleepHD");
                         StartupButton.Content = "设置开机自启动";
-                    }
-                    else
-                    {
+                    } else {
                         registryKey.SetValue("NoSleepHD", $"\"{path}\" --slient");
                         StartupButton.Content = "取消开机自启动";
                     }

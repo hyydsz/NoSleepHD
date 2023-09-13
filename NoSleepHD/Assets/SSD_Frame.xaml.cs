@@ -4,22 +4,13 @@ namespace NoSleepHD.Assets
 {
     public partial class SSD_Frame : ListBoxItem
     {
-        public SSD_Frame(string name)
+        public SSD_Frame(string name, bool isCheck)
         {
             InitializeComponent();
 
             Check.Content = name;
 
-            if (MainWindow.disks != null)
-            {
-                foreach (string disk in MainWindow.disks)
-                {
-                    if (name == disk)
-                    {
-                        Check.IsChecked = true;
-                    }
-                }
-            }
+            Check.IsChecked = isCheck;
         }
 
         private void Check_Click(object sender, System.Windows.RoutedEventArgs e)
