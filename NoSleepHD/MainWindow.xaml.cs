@@ -181,7 +181,6 @@ namespace NoSleepHD
                     break;
 
                 case "Startup":
-
                     RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
                     if ($"\"{path}\" --slient" == registryKey.GetValue("NoSleepHD", string.Empty).ToString())
                     {
