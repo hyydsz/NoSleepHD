@@ -1,6 +1,0 @@
-﻿<ListBoxItem x:Class="NoSleepHD.Assets.SSD_Frame"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Style="{StaticResource ItemStyle}">
-
-    <CheckBox x:Name="Check" Style="{StaticResource CheckedBox}" Click="Check_Click"/>
-</ListBoxItem>

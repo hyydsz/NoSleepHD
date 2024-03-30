@@ -5,22 +5,35 @@
     <PathGeometry x:Key="close" Figures="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
     
     <Style x:Key="IconButtonsStyle" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#333333"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="35"/>
-        <Setter Property="Width" Value="35"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <Path Data="{TemplateBinding Content}" Fill="{TemplateBinding Foreground}" Height="24" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Border CornerRadius="1" Background="{TemplateBinding Background}">
+                        <Path x:Name="PART_Path" Data="{TemplateBinding Content}" Stretch="Uniform" Width="11" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#999999" StrokeThickness="0.1" Stroke="#FAFAFA"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#c8c8c8"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" From="Transparent" To="#D3D3D3" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="PART_Path" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)" From="#999999" To="#000" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" From="#D3D3D3" To="Transparent" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="PART_Path" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)" From="#000" To="#999999" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -29,22 +42,36 @@
     </Style>
 
     <Style x:Key="exitButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#333333"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="35"/>
-        <Setter Property="Width" Value="35"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="0 10 0 0" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <Path Data="{TemplateBinding Content}" Fill="{TemplateBinding Foreground}" Height="24" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Border CornerRadius="1" Background="{TemplateBinding Background}">
+                        <Path x:Name="PART_Path" Data="{TemplateBinding Content}" Stretch="Uniform" Width="11" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#999999" StrokeThickness="0.1" Stroke="#FAFAFA"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#fb4444"/>
+
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" From="Transparent" To="#C92B0C" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="PART_Path" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)" From="#999999" To="#FFF" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" From="#C92B0C" To="Transparent" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="PART_Path" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)" From="#FFF" To="#999999" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -56,6 +83,8 @@
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -63,21 +92,21 @@
                         <Storyboard x:Key="StoryboardIsChecked">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
                                 <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="14"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="35"/>
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                         <Storyboard x:Key="StoryboardIsCheckedOff">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
-                                <EasingDoubleKeyFrame KeyTime="0" Value="14"/>
+                                <EasingDoubleKeyFrame KeyTime="0" Value="35"/>
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
                     <BulletDecorator Background="Transparent" SnapsToDevicePixels="true">
                         <BulletDecorator.Bullet>
-                            <Border x:Name="ForegroundPanel" BorderThickness="1" Width="35" Height="20" CornerRadius="10">
+                            <Border x:Name="ForegroundPanel" BorderThickness="1" Width="60" Height="25" CornerRadius="13">
                                 <Canvas>
-                                    <Border Background="#FFFFFF" BorderBrush="#999999" x:Name="CheckFlag" CornerRadius="10" VerticalAlignment="Center" BorderThickness="1" Width="18" Height="18" RenderTransformOrigin="0.5,0.5">
+                                    <Border Background="#FFFFFF" BorderBrush="#999999" x:Name="CheckFlag" CornerRadius="10" VerticalAlignment="Center" BorderThickness="1" Width="22" Height="22" RenderTransformOrigin="0.5,0.5">
                                         <Border.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>
@@ -100,7 +129,7 @@
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="ForegroundPanel" Property="Background" Value="#99ff99" />
+                            <Setter TargetName="ForegroundPanel" Property="Background" Value="#3355FF" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard x:Name="BeginStoryboardCheckedTrue" Storyboard="{StaticResource StoryboardIsChecked}" />
                                 <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedFalse" />
@@ -132,6 +161,7 @@
     <Style x:Key="longButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonsStyle}">
         <Setter Property="Width" Value="80"/>
         <Setter Property="Background" Value="#3355FF"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

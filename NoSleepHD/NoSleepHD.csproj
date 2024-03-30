@@ -26,10 +26,4 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Assets\SSD_Frame.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Page>
-  </ItemGroup>
-
 </Project>
