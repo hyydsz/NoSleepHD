@@ -9,27 +9,26 @@ namespace NoSleepHD
     {
         public static List<string> Languages = new List<string>()
         {
-            "zh-CN", "en-US"
+            "zh-CN", 
+            "en-US"
         };
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             InitLanguage();
 
-            foreach (string arg in e.Args)
-            {
-                if (arg == "--slient")
-                {
-                    NoSleepHD.MainWindow.Started = true;
-                }
-            }
+            NoSleepHD.MainWindow.HandlerArgs(e.Args);
         }
 
         public static void InitLanguage()
         {
             string lang = System.Globalization.CultureInfo.CurrentCulture.Name;
 
-            if (!Languages.Contains(lang)) return;
+            if (!Languages.Contains(lang)) {
+                return;
+            }
 
             string requestedCulture = $"Assets/Lang/{lang}.xaml";
             Current.Resources.MergedDictionaries[1].Source = new Uri(requestedCulture, UriKind.Relative);
@@ -42,9 +41,9 @@ namespace NoSleepHD
 
             while (enumerator.MoveNext())
             {
-                if (enumerator.Key.ToString().Equals(key))
+                if (enumerator.Key.ToString() == key)
                 {
-                    return enumerator.Value.ToString();
+                    return enumerator.Value?.ToString() ?? "";
                 }
             }
 

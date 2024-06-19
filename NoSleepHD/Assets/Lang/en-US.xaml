@@ -5,8 +5,7 @@
     <s:String x:Key="text_open">open</s:String>
     <s:String x:Key="text_close">close</s:String>
 
-    <s:String x:Key="text_set_startup">Set Startup</s:String>
-    <s:String x:Key="text_unset_startup">Unset Startup</s:String>
+    <s:String x:Key="text_startup">System Startup</s:String>
 
     <s:String x:Key="text_nosleep_start">Start</s:String>
     <s:String x:Key="text_nosleep_stop">Stop</s:String>
@@ -16,5 +15,12 @@
     <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">This is a file to prevent HDD sleep ——NoSleepHD</s:String>
 
     <s:String x:Key="text_warning">warning</s:String>
+
+    <s:String x:Key="text_setting">Setting</s:String>
+
+    <s:String x:Key="text_timing">Timing</s:String>
+
+    <s:String x:Key="text_start_time">Start Time</s:String>
+    <s:String x:Key="text_end_time">End Time</s:String>
 
 </ResourceDictionary>

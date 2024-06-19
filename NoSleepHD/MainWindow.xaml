@@ -21,26 +21,41 @@
 
             <tb:TaskbarIcon x:Name="notifyIcon"
                             IconSource="/hdd.ico" 
+                            ToolTipText="NoSleepHD"
                             DoubleClickCommand="{Binding command}"
                             DoubleClickCommandParameter="Open">
 
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="{DynamicResource text_open}" Command="{Binding command}" CommandParameter="Open"/>
-                        <MenuItem Header="{DynamicResource text_close}" Command="{Binding command}" CommandParameter="Close"/>
+                        <MenuItem Header="{DynamicResource text_open}" 
+                                  Command="{Binding command}" CommandParameter="Open"/>
+                        
+                        <MenuItem Header="{DynamicResource text_close}" 
+                                  Command="{Binding command}" CommandParameter="Close"/>
                     </ContextMenu>
                 </tb:TaskbarIcon.ContextMenu>
             </tb:TaskbarIcon>
 
             <Grid Grid.Row="0">
                 <TextBlock Text="NoSleepHD" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+
+                <Button HorizontalAlignment="Left"
+                        Command="{Binding command}" CommandParameter="TopSetting"
+                        Style="{StaticResource IconButtonsStyle}" Content="{StaticResource setting}"/>
+
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Command="{Binding command}" CommandParameter="mini" Style="{StaticResource IconButtonsStyle}" Content="{StaticResource minimize}"/>
-                    <Button Command="{Binding command}" CommandParameter="exit" Style="{StaticResource exitButtonStyle}" Content="{StaticResource close}"/>
+                    <Button Command="{Binding command}" CommandParameter="TopMini" 
+                            Style="{StaticResource IconButtonsStyle}" Content="{StaticResource minimize}"/>
+
+                    <Button Command="{Binding command}" CommandParameter="TopClose" 
+                            Style="{StaticResource exitButtonStyle}" Content="{StaticResource close}"/>
                 </StackPanel>
             </Grid>
 
             <Grid Grid.Row="1">
+
+                <Separator VerticalAlignment="Top"/>
+
                 <StackPanel Orientation="Vertical">
                     <ItemsControl x:Name="list_ssd" Height="120" VerticalAlignment="Top" Background="Transparent" BorderThickness="0 1 0 1">
                         <ItemsControl.ItemsPanel>
@@ -55,11 +70,12 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <Separator/>
+
+                    <Button Width="200" Style="{StaticResource longButtonStyle}" Margin="0 40 0 0" Content="{DynamicResource text_nosleep_start}" x:Name="StateButton"
+                            Command="{Binding command}" CommandParameter="Switch"/>
                     
-                    <Grid>
-                        <Button Command="{Binding command}" CommandParameter="Startup" Style="{StaticResource longButtonStyle}" Margin="35 40 35 0" Content="{DynamicResource text_set_startup}" x:Name="StartupButton" HorizontalAlignment="Left" Width="100"/>
-                        <Button Command="{Binding command}" CommandParameter="Start" Style="{StaticResource longButtonStyle}" Margin="35 40 35 0" Content="{DynamicResource text_nosleep_start}" x:Name="StateButton" HorizontalAlignment="Right"/>
-                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>

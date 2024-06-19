@@ -1,11 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,14 +14,13 @@ namespace NoSleepHD
 {
     public partial class MainWindow : Window
     {
-        public static readonly string path = Assembly.GetExecutingAssembly().Location;
-        public static bool Started = false;
+        private static bool Started = false;
 
-        public List<string>? disks = null;
-        public RegistryKey registry = Registry.CurrentUser.CreateSubKey("Software\\NoSleepHD", true);
+        public List<string> disks;
 
-        private ObservableCollection<DiskList> lists = new ObservableCollection<DiskList>();
-        private Timer Timer;
+        private readonly SettingView settingView;
+        private readonly ObservableCollection<DiskList> lists = new ObservableCollection<DiskList>();
+        private readonly Timer Timer;
 
         public MainWindow()
         {
@@ -37,7 +35,19 @@ namespace NoSleepHD
 
             list_ssd.ItemsSource = lists;
 
-            DataContext = new WindowDataContext(this);
+            settingView = new SettingView(this);
+            DataContext = new WindowViewModel(this);
+        }
+
+        public static void HandlerArgs(string[] args)
+        {
+            foreach (string arg in args)
+            {
+                if (arg == "--slient")
+                {
+                    Started = true;
+                }
+            }
         }
 
         private void Load_SSD()
@@ -53,33 +63,39 @@ namespace NoSleepHD
 
         private void Load_Registry()
         {
-            string[]? disklist = registry.GetValue("Disk_List", new string[0]) as string[];
-            disks = disklist?.ToList();
-
-            if (disks == null) {
+            string[]? disklist = SettingView.registry.GetValue("Disk_List", new string[0]) as string[];
+            if (disklist == null)
+            {
                 disks = new List<string>();
             }
-
-            if (TryStartupCurrent(false)) {
-                StartupButton.Content = App.getStringByKey("text_unset_startup");
+            else
+            {
+                disks = disklist.ToList();
             }
 
-            if (Started) {
+            if (Started) 
+            {
                 StartDiskNoSleep();
             }
         }
 
-        private void StartDiskNoSleep()
+        public void StartDiskNoSleep()
         {
-            SetState(false);
+            if (Timer.Enabled) {
+                return;
+            }
+
+            notifyIcon.ShowBalloonTip("", App.getStringByKey("nosleep_already_started"), BalloonIcon.Info);
 
             Timer.Start();
             StateButton.Content = App.getStringByKey("text_nosleep_stop");
         }
 
-        private void StopDiskNoSleep()
+        public void StopDiskNoSleep()
         {
-            SetState(true);
+            if (!Timer.Enabled) {
+                return;
+            }
 
             Timer.Stop();
             StateButton.Content = App.getStringByKey("text_nosleep_start");
@@ -87,20 +103,19 @@ namespace NoSleepHD
 
         private void WriteToHDD(object? sender, ElapsedEventArgs e)
         {
+            if (disks == null) {
+                return;
+            }
+
             foreach (string disk in disks)
             {
                 File.WriteAllText(disk + "NoSleepHD", App.getStringByKey("this_is_a_file_to_prevent_hdd_sleep"));
             }
         }
 
-        private void DragMove(object sender, MouseButtonEventArgs e)
+        private void UpdateDiskList(string? diskName, bool mchecked)
         {
-            DragMove();
-        }
-
-        private void UpdateDiskList(string diskName, bool mchecked)
-        {
-            if (diskName == null) {
+            if (diskName == null || disks == null) {
                 return;
             }
 
@@ -113,7 +128,7 @@ namespace NoSleepHD
                 disks.Remove(diskName);
             }
 
-            registry.SetValue("Disk_List", disks.ToArray());
+            SettingView.registry.SetValue("Disk_List", disks.ToArray());
         }
 
         private void SetState(bool Show)
@@ -134,11 +149,12 @@ namespace NoSleepHD
         {
             switch (CommandParameter)
             {
-                case "mini":
+                case "TopMini":
                     WindowState = WindowState.Minimized;
                     break;
 
-                case "exit":
+                case "TopClose":
+
                     if (Timer.Enabled)
                     {
                         SetState(false);
@@ -150,7 +166,12 @@ namespace NoSleepHD
 
                     break;
 
-                case "Start":
+                case "TopSetting":
+                    settingView.Show();
+                    break;
+
+                case "Switch":
+
                     if (Timer.Enabled)
                     {
                         StopDiskNoSleep();
@@ -159,17 +180,18 @@ namespace NoSleepHD
                     {
                         if (disks.Count == 0)
                         {
-                            MessageBox.Show(App.getStringByKey("you_have_not_selected_any_hdd"), App.getStringByKey("text_warning"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(
+                                App.getStringByKey("you_have_not_selected_any_hdd"), 
+                                App.getStringByKey("text_warning"), 
+                                MessageBoxButton.OK, 
+                                MessageBoxImage.Error
+                            );
+
                             return;
                         }
 
-                        notifyIcon.ShowBalloonTip(string.Empty, App.getStringByKey("nosleep_already_started"), Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
                         StartDiskNoSleep();
                     }
-                    break;
-
-                case "Startup":
-                    TryStartupCurrent(true);
                     break;
 
                 case "Open":
@@ -182,84 +204,39 @@ namespace NoSleepHD
             }
         }
 
-        private bool TryStartupCurrent(bool Switch)
-        {
-            bool current = false;
-
-            RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-            if (registryKey == null) {
-                return false;
-            }
-
-            if ($"\"{path}\" --slient" == registryKey.GetValue("NoSleepHD", "").ToString())
-            {
-                current = true;
-            }
-
-            if (Switch)
-            {
-                if (current)
-                {
-                    registryKey.DeleteValue("NoSleepHD");
-                    StartupButton.Content = App.getStringByKey("text_set_startup");
-                }
-                else
-                {
-                    registryKey.SetValue("NoSleepHD", $"\"{path}\" --slient");
-                    StartupButton.Content = App.getStringByKey("text_unset_startup");
-                }
-            }
-
-            return current;
-        }
-
         private void OnDiskClick(object sender, RoutedEventArgs e)
         {
-            CheckBox check = sender as CheckBox;
+            CheckBox check = (CheckBox) sender;
             if (check != null)
             {
-                UpdateDiskList(check.Content.ToString(), check.IsChecked.Value);
+                UpdateDiskList(check.Content.ToString(), check.IsChecked ?? false);
             }
+        }
+
+        private void DragMove(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        public class WindowViewModel
+        {
+            private MainWindow view;
+
+            public WindowViewModel(MainWindow view)
+            {
+                this.view = view;
+            }
+
+            public ICommand command => new StringCommand(s =>
+            {
+                view.AllButtonHandler(s);
+            });
         }
 
         public class DiskList
         {
-            public string text { get; set;}
-            public bool mchecked {  get; set;}
-        }
-
-        public class WindowDataContext
-        {
-            public WindowDataContext(MainWindow window)
-            {
-                command = new RelayCommand(s =>
-                {
-                    window.AllButtonHandler(s);
-                });
-            }
-
-            public ICommand command { get; set; }
-
-            private class RelayCommand : ICommand
-            {
-                public event EventHandler? CanExecuteChanged;
-                public Action<string?> ExecuteAction;
-
-                public bool CanExecute(object? parameter)
-                {
-                    return true;
-                }
-
-                public void Execute(object? parameter)
-                {
-                    ExecuteAction.Invoke(parameter?.ToString());
-                }
-
-                public RelayCommand(Action<string?> action)
-                {
-                    ExecuteAction = action;
-                }
-            }
+            public string text { get; set; }
+            public bool mchecked { get; set; }
         }
     }
 }

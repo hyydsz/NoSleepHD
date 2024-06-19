@@ -3,7 +3,8 @@
 
     <PathGeometry x:Key="minimize" Figures="M19 13H5a1 1 0 0 1 0-2h14a1 1 0 0 1 0 2z"/>
     <PathGeometry x:Key="close" Figures="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
-    
+    <PathGeometry x:Key="setting" Figures="M972.8 576l-70.4 12.8c-6.4 12.8-6.4 25.6-12.8 38.4l38.4 57.6 32 44.8-166.4 166.4-44.8-32-57.6-38.4c-12.8 6.4-25.6 6.4-38.4 12.8l-12.8 70.4-12.8 51.2h-230.4l-12.8-51.2-12.8-70.4c-12.8-6.4-25.6-6.4-38.4-12.8l-57.6 38.4-44.8 25.6-160-160 32-44.8 38.4-57.6c-12.8-12.8-12.8-25.6-19.2-38.4l-70.4-12.8-51.2-12.8v-230.4l51.2-12.8 70.4-12.8c6.4-12.8 6.4-25.6 12.8-38.4l-38.4-57.6-32-44.8 166.4-166.4 44.8 32 57.6 38.4c12.8-6.4 25.6-6.4 38.4-12.8l12.8-70.4 12.8-51.2h230.4l12.8 51.2 12.8 70.4c12.8 6.4 25.6 6.4 38.4 12.8l57.6-38.4 44.8-32 166.4 166.4-32 44.8-38.4 57.6c6.4 12.8 12.8 25.6 12.8 38.4l70.4 12.8 51.2 12.8v230.4l-51.2 12.8zM960 384l-108.8-19.2c-6.4-32-19.2-64-38.4-96l57.6-89.6-89.6-89.6-89.6 57.6c-32-19.2-64-32-96-38.4l-19.2-108.8h-128l-19.2 108.8c-32 6.4-64 19.2-96 38.4l-89.6-57.6-89.6 89.6 57.6 89.6c-19.2 32-32 64-38.4 96l-108.8 19.2v128l108.8 19.2c6.4 32 19.2 64 38.4 96l-64 89.6 89.6 89.6 89.6-57.6c32 19.2 64 32 96 38.4l25.6 108.8h128l19.2-108.8c32-6.4 64-19.2 96-38.4l89.6 57.6 89.6-89.6-57.6-89.6c19.2-32 32-64 38.4-96l108.8-19.2v-128zM512 672c-121.6 0-224-102.4-224-224s102.4-224 224-224 224 102.4 224 224c0 121.6-102.4 224-224 224zM512 288c-89.6 0-160 70.4-160 160s70.4 160 160 160 160-70.4 160-160c0-89.6-70.4-160-160-160z"/>
+
     <Style x:Key="IconButtonsStyle" TargetType="Button">
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="35"/>
@@ -12,7 +13,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border CornerRadius="1" Background="{TemplateBinding Background}">
-                        <Path x:Name="PART_Path" Data="{TemplateBinding Content}" Stretch="Uniform" Width="11" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#999999" StrokeThickness="0.1" Stroke="#FAFAFA"/>
+                        <Path x:Name="PART_Path" Data="{TemplateBinding Content}" Stretch="Uniform" Width="15" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center" 
+                              Fill="#999999" StrokeThickness="0.1" Stroke="#FAFAFA"/>
                     </Border>
 
                     <ControlTemplate.Triggers>

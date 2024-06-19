@@ -5,8 +5,7 @@
     <s:String x:Key="text_open">打开</s:String>
     <s:String x:Key="text_close">关闭</s:String>
 
-    <s:String x:Key="text_set_startup">设置开机自启动</s:String>
-    <s:String x:Key="text_unset_startup">取消开机自启动</s:String>
+    <s:String x:Key="text_startup">开机自启动</s:String>
 
     <s:String x:Key="text_nosleep_start">启动</s:String>
     <s:String x:Key="text_nosleep_stop">停止</s:String>
@@ -16,5 +15,12 @@
     <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">这是一个防止硬盘休眠的文件 ——NoSleepHD</s:String>
     
     <s:String x:Key="text_warning">警告</s:String>
+
+    <s:String x:Key="text_setting">设置</s:String>
+
+    <s:String x:Key="text_timing">定时</s:String>
+
+    <s:String x:Key="text_start_time">开始时间</s:String>
+    <s:String x:Key="text_end_time">结束时间</s:String>
 
 </ResourceDictionary>
