@@ -11,6 +11,7 @@ namespace NoSleepHD
     public partial class SettingView : Window
     {
         public static readonly RegistryKey registry = Registry.CurrentUser.CreateSubKey("Software\\NoSleepHD", true);
+
         public static readonly string appName = "NoSleepHD";
         public static readonly string appPath = Path.Combine(Environment.CurrentDirectory, appName + ".exe");
 
@@ -154,45 +155,44 @@ namespace NoSleepHD
                     TimeSpan start = TimeSpan.FromHours(StartHour) + TimeSpan.FromMinutes(StartMinute);
                     TimeSpan end = TimeSpan.FromHours(EndHour) + TimeSpan.FromMinutes(EndMinute);
 
-                    if (start == end) {
-                        continue;
-                    }
-
-                    bool enabled = false;
-
-                    if (start > end)
+                    if (start != end)
                     {
-                        if (now.TimeOfDay > end)
+                        bool enabled = false;
+
+                        if (start > end)
                         {
-                            enabled = false;
+                            if (now.TimeOfDay > end)
+                            {
+                                enabled = false;
+                            }
+
+                            if (now.TimeOfDay > start)
+                            {
+                                enabled = true;
+                            }
+                        }
+                        else
+                        {
+                            if (now.TimeOfDay > start)
+                            {
+                                enabled = true;
+                            }
+
+                            if (now.TimeOfDay > end)
+                            {
+                                enabled = false;
+                            }
                         }
 
-                        if (now.TimeOfDay > start)
-                        {
-                            enabled = true;
-                        }
-                    }
-                    else
-                    {
-                        if (now.TimeOfDay > start)
-                        {
-                            enabled = true;
-                        }
 
-                        if (now.TimeOfDay > end)
+                        if (enabled)
                         {
-                            enabled = false;
+                            main.StartDiskNoSleep();
                         }
-                    }
-                    
-
-                    if (enabled)
-                    {
-                        main.StartDiskNoSleep();
-                    }
-                    else
-                    {
-                        main.StopDiskNoSleep();
+                        else
+                        {
+                            main.StopDiskNoSleep();
+                        }
                     }
                 }
 

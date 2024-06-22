@@ -75,7 +75,10 @@ namespace NoSleepHD
 
             if (Started) 
             {
-                StartDiskNoSleep();
+                SetState(false);
+
+                Timer.Start();
+                StateButton.Content = App.getStringByKey("text_nosleep_stop");
             }
         }
 
