@@ -2,40 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NoSleepHD
 {
     public partial class MainWindow : Window
     {
-        private static bool Started = false;
-
-        public List<string> disks;
-
-        private readonly SettingView settingView;
-        private readonly ObservableCollection<DiskList> lists = new ObservableCollection<DiskList>();
-        private readonly Timer Timer;
+        public static bool NeedStart = false;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Timer = new Timer();
-            Timer.Interval = TimeSpan.FromMinutes(2.5f).TotalMilliseconds;
-            Timer.Elapsed += WriteToHDD;
-
-            Load_Registry();
-            Load_SSD();
-
-            list_ssd.ItemsSource = lists;
-
-            settingView = new SettingView(this);
             DataContext = new WindowViewModel(this);
         }
 
@@ -45,96 +27,12 @@ namespace NoSleepHD
             {
                 if (arg == "--slient")
                 {
-                    Started = true;
+                    NeedStart = true;
                 }
             }
         }
 
-        private void Load_SSD()
-        {
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-            {
-                if (drive.DriveType == DriveType.Fixed)
-                {
-                    lists.Add(new DiskList() { text = drive.Name, mchecked = disks == null ? false : disks.Contains(drive.Name) });
-                }
-            }
-        }
-
-        private void Load_Registry()
-        {
-            string[]? disklist = SettingView.registry.GetValue("Disk_List", new string[0]) as string[];
-            if (disklist == null)
-            {
-                disks = new List<string>();
-            }
-            else
-            {
-                disks = disklist.ToList();
-            }
-
-            if (Started) 
-            {
-                SetState(false);
-
-                Timer.Start();
-                StateButton.Content = App.getStringByKey("text_nosleep_stop");
-            }
-        }
-
-        public void StartDiskNoSleep()
-        {
-            if (Timer.Enabled) {
-                return;
-            }
-
-            notifyIcon.ShowBalloonTip("", App.getStringByKey("nosleep_already_started"), BalloonIcon.Info);
-
-            Timer.Start();
-            StateButton.Content = App.getStringByKey("text_nosleep_stop");
-        }
-
-        public void StopDiskNoSleep()
-        {
-            if (!Timer.Enabled) {
-                return;
-            }
-
-            Timer.Stop();
-            StateButton.Content = App.getStringByKey("text_nosleep_start");
-        }
-
-        private void WriteToHDD(object? sender, ElapsedEventArgs e)
-        {
-            if (disks == null) {
-                return;
-            }
-
-            foreach (string disk in disks)
-            {
-                File.WriteAllText(disk + "NoSleepHD", App.getStringByKey("this_is_a_file_to_prevent_hdd_sleep"));
-            }
-        }
-
-        private void UpdateDiskList(string? diskName, bool mchecked)
-        {
-            if (diskName == null || disks == null) {
-                return;
-            }
-
-            if (mchecked)
-            {
-                disks.Add(diskName);
-            }
-            else
-            {
-                disks.Remove(diskName);
-            }
-
-            SettingView.registry.SetValue("Disk_List", disks.ToArray());
-        }
-
-        private void SetState(bool Show)
+        public void SetState(bool Show)
         {
             if (Show)
             {
@@ -147,26 +45,76 @@ namespace NoSleepHD
                 Visibility = Visibility.Hidden;
             }
         }
-
-        public void AllButtonHandler(string CommandParameter) 
+        
+        public void ShowStartMessage()
         {
-            switch (CommandParameter)
+            notifyIcon.ShowBalloonTip(null, App.getStringByKey("nosleep_already_started"), BalloonIcon.Info);
+        }
+
+        private void DragMove(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            base.OnClosing(e);
+        }
+    }
+
+    public class WindowViewModel : INotifyPropertyChanged
+    {
+        private MainWindow view;
+        private SettingView settingView;
+
+        private Timer timer;
+        private List<string> disks;
+
+        public ObservableCollection<DiskList> DiskLists { get; }
+
+        public bool IsStarted
+        {
+            get
+            {
+                return timer.Enabled;
+            }
+        }
+
+        public WindowViewModel(MainWindow view)
+        {
+            this.view = view;
+
+            DiskLists = new ObservableCollection<DiskList>();
+
+            timer = new Timer();
+            timer.Interval = TimeSpan.FromSeconds(2.5).TotalMilliseconds;
+            timer.Elapsed += WriteToHDD;
+
+            LoadRegistry();
+            LoadSSD();
+
+            settingView = new SettingView(this);
+        }
+
+        public ICommand OnButtonCommand => new RelayCommand<string>(s =>
+        {
+            switch (s)
             {
                 case "TopMini":
-                    WindowState = WindowState.Minimized;
+                    view.WindowState = WindowState.Minimized;
                     break;
 
                 case "TopClose":
-
-                    if (Timer.Enabled)
+                    if (IsStarted)
                     {
-                        SetState(false);
-                    } 
-                    else 
-                    {
-                        Process.GetCurrentProcess().Kill();
+                        view.SetState(false);
                     }
-
+                    else
+                    {
+                        Environment.Exit(0);
+                    }
                     break;
 
                 case "TopSetting":
@@ -174,19 +122,18 @@ namespace NoSleepHD
                     break;
 
                 case "Switch":
-
-                    if (Timer.Enabled)
+                    if (IsStarted)
                     {
                         StopDiskNoSleep();
-                    } 
-                    else 
+                    }
+                    else
                     {
                         if (disks.Count == 0)
                         {
                             MessageBox.Show(
-                                App.getStringByKey("you_have_not_selected_any_hdd"), 
-                                App.getStringByKey("text_warning"), 
-                                MessageBoxButton.OK, 
+                                App.getStringByKey("you_have_not_selected_any_hdd"),
+                                App.getStringByKey("text_warning"),
+                                MessageBoxButton.OK,
                                 MessageBoxImage.Error
                             );
 
@@ -198,48 +145,98 @@ namespace NoSleepHD
                     break;
 
                 case "Open":
-                    SetState(true);
+                    view.SetState(true);
                     break;
 
                 case "Close":
-                    Process.GetCurrentProcess().Kill();
+                    Environment.Exit(0);
                     break;
             }
-        }
+        });
 
-        private void OnDiskClick(object sender, RoutedEventArgs e)
+        public ICommand OnDiskButtonCommand => new RelayCommand<DiskList>(s =>
         {
-            CheckBox check = (CheckBox) sender;
-            if (check != null)
+            if (s.IsChecked)
             {
-                UpdateDiskList(check.Content.ToString(), check.IsChecked ?? false);
+                disks.Add(s.Text);
+            }
+            else
+            {
+                disks.Remove(s.Text);
+            }
+
+            SettingView.registry.SetValue("Disk_List", disks.ToArray());
+        });
+
+        private void LoadSSD()
+        {
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.DriveType == DriveType.Fixed)
+                {
+                    DiskLists.Add(new DiskList(drive.Name, disks.Contains(drive.Name)));
+                }
             }
         }
 
-        private void DragMove(object sender, MouseButtonEventArgs e)
+        private void LoadRegistry()
         {
-            DragMove();
-        }
+            string[] disklist = (string[])SettingView.registry.GetValue("Disk_List", new string[0]);
+            disks = new List<string>(disklist);
 
-        public class WindowViewModel
-        {
-            private MainWindow view;
-
-            public WindowViewModel(MainWindow view)
+            if (MainWindow.NeedStart)
             {
-                this.view = view;
+                view.SetState(false);
+
+                timer.Start();
+                OnPropertyChanged(nameof(IsStarted));
             }
-
-            public ICommand command => new StringCommand(s =>
-            {
-                view.AllButtonHandler(s);
-            });
         }
 
-        public class DiskList
+        public void StartDiskNoSleep()
         {
-            public string text { get; set; }
-            public bool mchecked { get; set; }
+            if (IsStarted)
+                return;
+
+            view.ShowStartMessage();
+
+            timer.Start();
+            OnPropertyChanged(nameof(IsStarted));
+        }
+
+        public void StopDiskNoSleep()
+        {
+            if (!IsStarted)
+                return;
+
+            timer.Stop();
+            OnPropertyChanged(nameof(IsStarted));
+        }
+
+        private void WriteToHDD(object sender, ElapsedEventArgs e)
+        {
+            foreach (string disk in disks)
+            {
+                File.WriteAllText(disk + "NoSleepHD", App.getStringByKey("this_is_a_file_to_prevent_hdd_sleep"));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class DiskList
+    {
+        public string Text { get; set; }
+        public bool IsChecked { get; set; }
+
+        public DiskList(string text, bool isChecked)
+        {
+            Text = text;
+            IsChecked = isChecked;
         }
     }
 }

@@ -12,7 +12,7 @@
 
     <s:String x:Key="nosleep_already_started">NoSleep 已经启动</s:String>
     <s:String x:Key="you_have_not_selected_any_hdd">你没有选择任何硬盘!</s:String>
-    <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">这是一个防止硬盘休眠的文件 ——NoSleepHD</s:String>
+    <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">这是一个防止硬盘休眠的文件</s:String>
     
     <s:String x:Key="text_warning">警告</s:String>
 

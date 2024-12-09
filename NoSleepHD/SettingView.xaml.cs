@@ -15,25 +15,25 @@ namespace NoSleepHD
         public static readonly string appName = "NoSleepHD";
         public static readonly string appPath = Path.Combine(Environment.CurrentDirectory, appName + ".exe");
 
-        public SettingView(MainWindow main)
+        public SettingView(WindowViewModel viewModel)
         {
             InitializeComponent();
 
-            DataContext = new SettingViewModel(main);
+            DataContext = new SettingViewModel(viewModel);
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            Hide();
+
             e.Cancel = true;
             base.OnClosing(e);
-
-            Hide();
         }
     }
 
     public class SettingViewModel
     {
-        private MainWindow main;
+        private WindowViewModel viewModel;
 
         public bool onStartup
         {
@@ -125,9 +125,9 @@ namespace NoSleepHD
             }
         }
 
-        public SettingViewModel(MainWindow main)
+        public SettingViewModel(WindowViewModel viewModel)
         {
-            this.main = main;
+            this.viewModel = viewModel;
 
             Hour = new List<int>();
             for (int i = 0; i < 24; i++)
@@ -187,11 +187,11 @@ namespace NoSleepHD
 
                         if (enabled)
                         {
-                            main.StartDiskNoSleep();
+                            viewModel.StartDiskNoSleep();
                         }
                         else
                         {
-                            main.StopDiskNoSleep();
+                            viewModel.StopDiskNoSleep();
                         }
                     }
                 }
