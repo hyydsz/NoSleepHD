@@ -12,9 +12,8 @@
 
     <s:String x:Key="nosleep_already_started">NoSleep already started</s:String>
     <s:String x:Key="you_have_not_selected_any_hdd">You haven't selected any HDD</s:String>
-    <s:String x:Key="this_is_a_file_to_prevent_hdd_sleep">This is a file to prevent HDD sleep</s:String>
 
-    <s:String x:Key="text_warning">warning</s:String>
+    <s:String x:Key="text_warning">Warning</s:String>
 
     <s:String x:Key="text_setting">Setting</s:String>
 

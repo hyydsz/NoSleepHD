@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="NoSleepHD.View.SettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="300">
+
+    <StackPanel Orientation="Vertical">
+        <Grid Margin="15">
+            <TextBlock Text="{DynamicResource text_startup}"
+                       VerticalAlignment="Center" />
+
+            <CheckBox Style="{StaticResource CheckedBox}"
+                      HorizontalAlignment="Right"
+                      IsChecked="{Binding onStartup}" />
+        </Grid>
+
+        <Grid Margin="15">
+            <TextBlock Text="{DynamicResource text_timing}"
+                       VerticalAlignment="Center" />
+
+            <CheckBox Style="{StaticResource CheckedBox}"
+                      HorizontalAlignment="Right"
+                      IsChecked="{Binding onTiming}" />
+        </Grid>
+
+        <Grid Margin="15">
+            <TextBlock Text="{DynamicResource text_start_time}" />
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <ComboBox Width="50"
+                          ItemsSource="{Binding Hour}"
+                          SelectedValue="{Binding StartHour}" />
+                <ComboBox Width="50"
+                          ItemsSource="{Binding Minute}"
+                          SelectedValue="{Binding StartMinute}"
+                          Margin="5 0" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="15">
+            <TextBlock Text="{DynamicResource text_end_time}" />
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                <ComboBox Width="50"
+                          ItemsSource="{Binding Hour}"
+                          SelectedValue="{Binding EndHour}" />
+
+                <ComboBox Width="50"
+                          ItemsSource="{Binding Minute}"
+                          SelectedValue="{Binding EndMinute}"
+                          Margin="5 0" />
+            </StackPanel>
+        </Grid>
+
+        <Button Content="返回"
+                Style="{StaticResource longButtonStyle}"
+                Command="{Binding OnButtonCommand}"
+                CommandParameter="BackToMain"
+                Margin="0,10,0,0"/>
+
+    </StackPanel>
+
+</UserControl>

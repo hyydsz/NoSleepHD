@@ -5,8 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Assets/Styles/Light.xaml"/>
-
+                <ResourceDictionary Source="Assets/Styles/Light.xaml" />
                 <ResourceDictionary Source="Assets/Lang/zh-CN.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

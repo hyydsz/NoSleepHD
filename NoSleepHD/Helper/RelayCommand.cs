@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace NoSleepHD
+namespace NoSleepHD.Helper
 {
     public class RelayCommand<T> : ICommand
     {
@@ -20,7 +20,7 @@ namespace NoSleepHD
 
         public void Execute(object parameter)
         {
-            action.Invoke((T)parameter);    
+            action.Invoke((T)parameter);
         }
     }
 }

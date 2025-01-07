@@ -17,9 +17,9 @@ namespace NoSleepHD
         {
             base.OnStartup(e);
 
-            InitLanguage();
+            NoSleepHD.MainWindow.args = e.Args;
 
-            NoSleepHD.MainWindow.HandlerArgs(e.Args);
+            InitLanguage();
         }
 
         public static void InitLanguage()
