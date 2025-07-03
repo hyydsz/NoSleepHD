@@ -22,4 +22,6 @@
     <s:String x:Key="text_start_time">开始时间</s:String>
     <s:String x:Key="text_end_time">结束时间</s:String>
 
+    <s:String x:Key="text_return">返回</s:String>
+
 </ResourceDictionary>

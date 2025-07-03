@@ -10,7 +10,8 @@ namespace NoSleepHD
         public static List<string> Languages = new List<string>()
         {
             "zh-CN", 
-            "en-US"
+            "en-US",
+            "en-GB"
         };
 
         protected override void OnStartup(StartupEventArgs e)
