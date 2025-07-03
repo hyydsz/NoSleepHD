@@ -57,7 +57,7 @@
             </StackPanel>
         </Grid>
 
-        <Button Content="返回"
+        <Button Content="{DynamicResource text_return}"
                 Style="{StaticResource longButtonStyle}"
                 Command="{Binding OnButtonCommand}"
                 CommandParameter="BackToMain"
