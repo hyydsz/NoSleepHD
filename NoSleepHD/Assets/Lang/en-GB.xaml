@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <s:String x:Key="text_open">open</s:String>
+    <s:String x:Key="text_close">close</s:String>
+
+    <s:String x:Key="text_startup">System Startup</s:String>
+
+    <s:String x:Key="text_nosleep_start">Start</s:String>
+    <s:String x:Key="text_nosleep_stop">Stop</s:String>
+
+    <s:String x:Key="nosleep_already_started">NoSleep already started</s:String>
+    <s:String x:Key="you_have_not_selected_any_hdd">You haven't selected any HDD</s:String>
+
+    <s:String x:Key="text_warning">Warning</s:String>
+
+    <s:String x:Key="text_setting">Setting</s:String>
+
+    <s:String x:Key="text_timing">Timing</s:String>
+
+    <s:String x:Key="text_start_time">Start Time</s:String>
+    <s:String x:Key="text_end_time">End Time</s:String>
+
+</ResourceDictionary>
