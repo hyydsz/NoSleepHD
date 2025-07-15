@@ -152,41 +152,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <ControlTemplate.Resources>
-                        <Storyboard x:Key="StoryboardIsChecked">
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                             Storyboard.TargetName="CheckFlag"
-                                             From="0"
-                                             To="35"
-                                             Duration="0:0:0.2"/>
-                        </Storyboard>
-                        
-                        <Storyboard x:Key="StoryboardIsCheckedOff">
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                             Storyboard.TargetName="CheckFlag"
-                                             From="35"
-                                             To="0"
-                                             Duration="0:0:0.2" />
-                        </Storyboard>
-                    </ControlTemplate.Resources>
-
                     <StackPanel Background="Transparent"
                                 SnapsToDevicePixels="True"
                                 HorizontalAlignment="Left"
                                 Orientation="Horizontal">
 
                         <Border x:Name="Panel"
-                                Width="57"
+                                Background="#999"
+                                Width="50"
                                 CornerRadius="10">
 
-                            <Border Background="#FFFFFF"
-                                    BorderBrush="#999999"
-                                    x:Name="CheckFlag"
+                            <Border x:Name="CheckFlag"
+                                    Background="#FFF"
+                                    BorderBrush="#999"
                                     CornerRadius="10"
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
-                                    Width="22"
-                                    Height="22">
+                                    Width="20"
+                                    Height="20">
 
                                 <Border.RenderTransform>
                                     <TranslateTransform />
@@ -195,7 +178,8 @@
                             </Border>
                         </Border>
 
-                        <ContentPresenter Margin="5,0" VerticalAlignment="Center" />
+                        <ContentPresenter Margin="5,0"
+                                          VerticalAlignment="Center" />
                     </StackPanel>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled"
@@ -211,26 +195,29 @@
                                     Value="#3355FF" />
 
                             <Trigger.EnterActions>
-                                <BeginStoryboard x:Name="BeginStoryboardCheckedTrue"
-                                                 Storyboard="{StaticResource StoryboardIsChecked}" />
-                                
-                                <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedFalse" />
-                            </Trigger.EnterActions>
-                        </Trigger>
-
-                        <Trigger Property="IsChecked"
-                                 Value="False">
-                            <Setter TargetName="Panel"
-                                    Property="Background"
-                                    Value="#999999" />
-
-                            <Trigger.EnterActions>
-                                <BeginStoryboard x:Name="BeginStoryboardCheckedFalse"
-                                                 Storyboard="{StaticResource StoryboardIsCheckedOff}" />
-                                
-                                <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedTrue" />
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                         Storyboard.TargetName="CheckFlag"
+                                                         From="0"
+                                                         To="30"
+                                                         Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
                             </Trigger.EnterActions>
 
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                         Storyboard.TargetName="CheckFlag"
+                                                         From="30"
+                                                         To="0"
+                                                         Duration="0:0:0.2" />
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -273,6 +260,66 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="ContextMenuBaseStyle"
+           TargetType="ContextMenu">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContextMenu">
+                    
+                    <Border Background="{TemplateBinding Background}"
+                            MaxHeight="{TemplateBinding MaxHeight}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="5"
+                            BorderThickness="1"
+                            BorderBrush="#999">
+
+                        <ItemsPresenter />
+
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MenuItemBaseStyle"
+           TargetType="MenuItem">
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    
+                    <Border x:Name="PART_Border"
+                            CornerRadius="5"
+                            Margin="3">
+                        
+                        <ContentPresenter ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          Content="{TemplateBinding Header}"
+                                          RecognizesAccessKey="True"
+                                          Margin="5"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+
+                            <Setter TargetName="PART_Border"
+                                    Property="Background"
+                                    Value="#ddd"/>
+
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
     </Style>
 
 </ResourceDictionary>

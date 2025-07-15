@@ -1,42 +1,50 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using NoSleepHD.Global;
+using NoSleepHD.Interface;
 using NoSleepHD.ViewModel;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
 namespace NoSleepHD
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IMainWindow
     {
-        public static MainWindow Instance { get; private set; }
-
-        public static string[] args;
-
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new WindowViewModel(this);
 
-            Instance = this;
-            DataContext = new WindowViewModel();
+            LanguageGlobal.OnLanguageChanged += LanguageGlobal_OnLanguageChanged;
         }
 
-        public void SetState(bool Show)
+        // Refresh Notify ContextMenu Language
+        private void LanguageGlobal_OnLanguageChanged(object sender, EventArgs e)
         {
-            if (Show)
+            NotifyMenu.UpdateDefaultStyle();
+        }
+
+        public void Minimize()
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        public void ChangeState(bool show)
+        {
+            if (show)
             {
-                ShowInTaskbar = true;
-                Visibility = Visibility.Visible;
+                Show();
             }
             else
             {
-                ShowInTaskbar = false;
-                Visibility = Visibility.Hidden;
+                Hide();
             }
         }
-        
-        public void ShowStartMessage()
+
+        public void ShowNotifyMsg()
         {
-            notifyIcon.ShowBalloonTip(null, App.getStringByKey("nosleep_already_started"), BalloonIcon.Info);
+            notifyIcon.ShowBalloonTip(null, LanguageGlobal.GetStringByKey("nosleep_already_started"), BalloonIcon.Info);
         }
 
         private void DragMove(object sender, MouseButtonEventArgs e)
@@ -44,11 +52,10 @@ namespace NoSleepHD
             DragMove();
         }
 
+        // Cancel Close
         protected override void OnClosing(CancelEventArgs e)
         {
             e.Cancel = true;
-
-            base.OnClosing(e);
         }
     }
 }

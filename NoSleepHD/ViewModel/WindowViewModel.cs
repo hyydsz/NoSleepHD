@@ -8,10 +8,11 @@ using System.Windows.Input;
 using System.Windows;
 using NoSleepHD.Model;
 using NoSleepHD.View;
-using NoSleepHD.Helper;
+using NoSleepHD.Command;
 using Microsoft.Win32;
 using System.Threading.Tasks;
-using System.Linq;
+using NoSleepHD.Global;
+using NoSleepHD.Interface;
 
 namespace NoSleepHD.ViewModel
 {
@@ -42,7 +43,28 @@ namespace NoSleepHD.ViewModel
             }
         }
 
-        #region 设置使用的
+        #region For Setting
+
+        public List<LanguageModel> Languages
+        {
+            get
+            {
+                return LanguageGlobal.Languages;
+            }
+        }
+
+        public LanguageModel Language
+        {
+            get
+            {
+                return LanguageGlobal.CurrentLanguage;
+            }
+            set
+            {
+                LanguageGlobal.UpdateLanguage(value, true);
+            }
+        }
+
         public bool onStartup
         {
             get
@@ -60,13 +82,13 @@ namespace NoSleepHD.ViewModel
         {
             get
             {
-                _onTiming = (int)SettingView.registry.GetValue("onTiming", 0) == 1;
+                _onTiming = (int)MainGlobal.Registry.GetValue("onTiming", 0) == 1;
                 return _onTiming;
             }
             set
             {
                 _onTiming = value;
-                SettingView.registry.SetValue("onTiming", _onTiming ? 1 : 0);
+                MainGlobal.Registry.SetValue("onTiming", _onTiming ? 1 : 0);
             }
         }
 
@@ -78,13 +100,13 @@ namespace NoSleepHD.ViewModel
         {
             get
             {
-                _StartHour = (int)SettingView.registry.GetValue("StartHour", 0);
+                _StartHour = (int)MainGlobal.Registry.GetValue("StartHour", 0);
                 return _StartHour;
             }
             set
             {
                 _StartHour = value;
-                SettingView.registry.SetValue("StartHour", _StartHour);
+                MainGlobal.Registry.SetValue("StartHour", _StartHour);
             }
         }
 
@@ -93,13 +115,13 @@ namespace NoSleepHD.ViewModel
         {
             get
             {
-                _StartMinute = (int)SettingView.registry.GetValue("StartMinute", 0);
+                _StartMinute = (int)MainGlobal.Registry.GetValue("StartMinute", 0);
                 return _StartMinute;
             }
             set
             {
                 _StartMinute = value;
-                SettingView.registry.SetValue("StartMinute", _StartMinute);
+                MainGlobal.Registry.SetValue("StartMinute", _StartMinute);
             }
         }
 
@@ -108,13 +130,13 @@ namespace NoSleepHD.ViewModel
         {
             get
             {
-                _EndHour = (int)SettingView.registry.GetValue("EndHour", 0);
+                _EndHour = (int)MainGlobal.Registry.GetValue("EndHour", 0);
                 return _EndHour;
             }
             set
             {
                 _EndHour = value;
-                SettingView.registry.SetValue("EndHour", _EndHour);
+                MainGlobal.Registry.SetValue("EndHour", _EndHour);
             }
         }
 
@@ -123,15 +145,16 @@ namespace NoSleepHD.ViewModel
         {
             get
             {
-                _EndMinute = (int)SettingView.registry.GetValue("EndMinute", 0);
+                _EndMinute = (int)MainGlobal.Registry.GetValue("EndMinute", 0);
                 return _EndMinute;
             }
             set
             {
                 _EndMinute = value;
-                SettingView.registry.SetValue("EndMinute", _EndMinute);
+                MainGlobal.Registry.SetValue("EndMinute", _EndMinute);
             }
         }
+
         #endregion
 
         private MainView mainView;
@@ -140,10 +163,13 @@ namespace NoSleepHD.ViewModel
         private Timer timer;
         private List<string> disks;
 
-        public WindowViewModel()
-        {
-            DiskLists = new ObservableCollection<DiskList>();
+        private IMainWindow mainWindow;
 
+        public WindowViewModel(IMainWindow mainWindow)
+        {
+            this.mainWindow = mainWindow;
+
+            DiskLists = new ObservableCollection<DiskList>();
             settingView = new SettingView();
             mainView = new MainView();
 
@@ -158,20 +184,22 @@ namespace NoSleepHD.ViewModel
             LoadSSD();
         }
 
-        public ICommand OnButtonCommand => new RelayCommand<string>(s =>
+        public ICommand OnButtonCommand => new RelayCommand<string>(OnButton);
+
+        private void OnButton(string command)
         {
-            switch (s)
+            switch (command)
             {
                 case "TopMini":
-                    MainWindow.Instance.WindowState = WindowState.Minimized;
+                    mainWindow.Minimize();
                     break;
 
                 case "TopClose":
 
                     if (IsStarted)
                     {
-                        MainWindow.Instance.SetState(false);
-                        MainWindow.Instance.ShowStartMessage();
+                        mainWindow.ChangeState(false);
+                        mainWindow.ShowNotifyMsg();
                     }
                     else
                     {
@@ -198,14 +226,15 @@ namespace NoSleepHD.ViewModel
                     {
                         if (disks.Count == 0)
                         {
-                            MessageBox.Show(
-                                App.getStringByKey("you_have_not_selected_any_hdd"),
-                                App.getStringByKey("text_warning"),
+                            MessageBox.Show
+                            (
+                                LanguageGlobal.GetStringByKey("you_have_not_selected_any_hdd"),
+                                LanguageGlobal.GetStringByKey("text_warning"),
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error
                             );
 
-                            return;
+                            break;
                         }
 
                         StartDiskNoSleep();
@@ -213,17 +242,15 @@ namespace NoSleepHD.ViewModel
 
                     break;
 
-
-
-                case "Open":
-                    MainWindow.Instance.SetState(true);
+                case "NotifyOpen":
+                    mainWindow.ChangeState(true);
                     break;
 
-                case "Close":
-                    Environment.Exit(0);
+                case "NotifyClose":
+                    Application.Current.Shutdown();
                     break;
             }
-        });
+        }
 
         public ICommand OnDiskButtonCommand => new RelayCommand<DiskList>(s =>
         {
@@ -236,7 +263,7 @@ namespace NoSleepHD.ViewModel
                 disks.Remove(s.Path);
             }
 
-            SettingView.registry.SetValue("Disk_List", disks.ToArray());
+            MainGlobal.Registry.SetValue("Disk_List", disks.ToArray());
         });
 
         private void LoadSSD()
@@ -252,15 +279,15 @@ namespace NoSleepHD.ViewModel
 
         private void LoadRegistry()
         {
-            string[] disklist = (string[])SettingView.registry.GetValue("Disk_List", new string[0]);
-            disks = new List<string>(disklist);
+            string[] disklist = (string[])MainGlobal.Registry.GetValue("Disk_List", new string[0]);
+            disks = [.. disklist];
 
-            if (MainWindow.args.Contains("--slient"))
+            if (MainGlobal.IsSlientRun)
             {
-                MainWindow.Instance.SetState(false);
+                mainWindow.ChangeState(false);
                 timer.Start();
 
-                UpdateUI();
+                UpdateIsStarted();
             }
         }
 
@@ -270,8 +297,7 @@ namespace NoSleepHD.ViewModel
                 return;
 
             timer.Start();
-
-            UpdateUI();
+            UpdateIsStarted();
         }
 
         public void StopDiskNoSleep()
@@ -280,8 +306,7 @@ namespace NoSleepHD.ViewModel
                 return;
 
             timer.Stop();
-
-            UpdateUI();
+            UpdateIsStarted();
         }
 
         private void ReadFromHDD(object sender, ElapsedEventArgs e)
@@ -294,12 +319,8 @@ namespace NoSleepHD.ViewModel
             }
         }
 
-        private void UpdateUI()
-        {
-            OnPropertyChanged(nameof(IsStarted));
-        }
+        #region For Setting
 
-        #region 设置方法
         private void LoadSetting()
         {
             Hour = new List<int>();
@@ -386,7 +407,7 @@ namespace NoSleepHD.ViewModel
                 return false;
             }
 
-            return value.ToString() == $"\"{SettingView.appPath}\" --slient";
+            return value.ToString() == $"\"{MainGlobal.AppPath}\" --slient";
         }
 
         private void TryStartupCurrent(bool startup)
@@ -394,11 +415,17 @@ namespace NoSleepHD.ViewModel
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
 
             if (startup)
-                registryKey.SetValue("NoSleepHD", $"\"{SettingView.appPath}\" --slient");
+                registryKey.SetValue("NoSleepHD", $"\"{MainGlobal.AppPath}\" --slient");
             else
                 registryKey.DeleteValue("NoSleepHD");
         }
+
         #endregion
+
+        private void UpdateIsStarted()
+        {
+            OnPropertyChanged(nameof(IsStarted));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
