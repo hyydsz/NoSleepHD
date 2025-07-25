@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoSleepHD", "NoSleepHD\NoSleepHD.csproj", "{0150E24F-91B9-4A5B-B6BF-7475851A1ECB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoSleepHD.Core", "NoSleepHD.Core\NoSleepHD.Core.csproj", "{3DC790F4-2A4D-4F99-9EE6-60959D3684FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0150E24F-91B9-4A5B-B6BF-7475851A1ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0150E24F-91B9-4A5B-B6BF-7475851A1ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0150E24F-91B9-4A5B-B6BF-7475851A1ECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC790F4-2A4D-4F99-9EE6-60959D3684FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC790F4-2A4D-4F99-9EE6-60959D3684FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC790F4-2A4D-4F99-9EE6-60959D3684FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC790F4-2A4D-4F99-9EE6-60959D3684FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

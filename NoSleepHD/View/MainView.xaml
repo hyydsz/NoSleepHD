@@ -32,6 +32,7 @@
                                       IsChecked="{Binding IsChecked}"
                                       Content="{Binding Path}"
                                       Margin="5" />
+                            
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -50,15 +51,20 @@
             <Button.Style>
                 <Style TargetType="Button"
                        BasedOn="{StaticResource longButtonStyle}">
+                    
                     <Setter Property="Content"
                             Value="{DynamicResource text_nosleep_start}" />
+
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsStarted}"
                                      Value="True">
+
                             <Setter Property="Content"
                                     Value="{DynamicResource text_nosleep_stop}" />
+                            
                         </DataTrigger>
                     </Style.Triggers>
+
                 </Style>
             </Button.Style>
         </Button>

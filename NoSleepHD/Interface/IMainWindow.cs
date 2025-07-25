@@ -3,7 +3,5 @@
     public interface IMainWindow
     {
         void Minimize();
-        void ChangeState(bool show);
-        void ShowNotifyMsg();
     }
 }

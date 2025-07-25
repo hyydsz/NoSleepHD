@@ -1,7 +1,6 @@
 ﻿<Window x:Class="NoSleepHD.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="NoSleepHD"
         Height="300"
         Width="400"
@@ -28,33 +27,6 @@
                 <RowDefinition Height="35" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-
-            <tb:TaskbarIcon x:Name="notifyIcon"
-                            IconSource="/hdd.ico"
-                            ToolTipText="NoSleepHD"
-                            DoubleClickCommand="{Binding OnButtonCommand}"
-                            DoubleClickCommandParameter="NotifyOpen">
-
-                <tb:TaskbarIcon.ContextMenu>
-
-                    <ContextMenu x:Name="NotifyMenu"
-                                 Style="{StaticResource ContextMenuBaseStyle}">
-
-                        <MenuItem Style="{StaticResource MenuItemBaseStyle}"
-                                  Header="{DynamicResource text_open}"
-                                  Command="{Binding OnButtonCommand}"
-                                  CommandParameter="NotifyOpen" />
-
-                        <MenuItem Style="{StaticResource MenuItemBaseStyle}"
-                                  Header="{DynamicResource text_close}"
-                                  Command="{Binding OnButtonCommand}"
-                                  CommandParameter="NotifyClose" />
-
-                    </ContextMenu>
-
-                </tb:TaskbarIcon.ContextMenu>
-
-            </tb:TaskbarIcon>
 
             <Grid>
 

@@ -1,20 +1,23 @@
-﻿using NoSleepHD.Global;
-using System;
-using System.Linq;
+﻿using NoSleepHD.Manager;
+using System.Threading;
 using System.Windows;
 
 namespace NoSleepHD
 {
     public partial class App : Application
     {
+        private static Mutex? _mutex;
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            _mutex = new Mutex(true, "NoSleepHD", out bool createdNew);
+            if (!createdNew)
+            {
+                Shutdown();
+                return;
+            }
 
-            if (e.Args.Contains("--slient"))
-                MainGlobal.IsSlientRun = true;
-
-            LanguageGlobal.InitLanguage();
+            LanguageManager.InitLanguage();
         }
     }
 }

@@ -10,7 +10,6 @@
     <s:String x:Key="text_nosleep_start">Start</s:String>
     <s:String x:Key="text_nosleep_stop">Stop</s:String>
 
-    <s:String x:Key="nosleep_already_started">NoSleep already started</s:String>
     <s:String x:Key="you_have_not_selected_any_hdd">Please select HDD Driver</s:String>
 
     <s:String x:Key="text_warning">Warning</s:String>
@@ -24,5 +23,7 @@
 
     <s:String x:Key="text_back">Back</s:String>
     <s:String x:Key="text_language">Language</s:String>
+
+    <s:String x:Key="text_open_core_failed">Start NoSleepHD.Core Failed</s:String>
 
 </ResourceDictionary>

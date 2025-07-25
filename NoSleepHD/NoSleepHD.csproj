@@ -3,11 +3,14 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>hdd.ico</ApplicationIcon>
-    <Version>2.2.1</Version>
+    <Version>2.2.5</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Authors>hyydsz</Authors>
+    <Company>hyydsz</Company>
+    <Product />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <ProjectReference Include="..\NoSleepHD.Core\NoSleepHD.Core.csproj" />
   </ItemGroup>
 
 </Project>
