@@ -1,6 +1,7 @@
 ﻿using NoSleepHD.Core.Global;
 using NoSleepHD.Core.Language;
 using System;
+using System.Linq;
 using System.Windows;
 
 namespace NoSleepHD.Manager
@@ -25,7 +26,9 @@ namespace NoSleepHD.Manager
                 MainGlobal.NoSleepHDReg.SetValue("Langauge", language.LanguageText);
 
             string requestedCulture = $"Assets/Lang/{language.LanguagePath}.xaml";
-            Application.Current.Resources.MergedDictionaries[1].Source = new Uri(requestedCulture, UriKind.Relative);
+
+            ResourceDictionary languageDic = Application.Current.Resources.MergedDictionaries.Last();
+            languageDic.Source = new Uri(requestedCulture, UriKind.Relative);
         }
 
         public static string GetStringByKey(string key)

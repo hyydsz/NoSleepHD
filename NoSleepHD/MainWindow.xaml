@@ -1,67 +1,26 @@
-﻿<Window x:Class="NoSleepHD.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NoSleepHD"
-        Height="300"
-        Width="400"
-        ResizeMode="NoResize"
-        MouseLeftButtonDown="DragMove">
+﻿<ui:FluentWindow x:Class="NoSleepHD.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="NoSleepHD"
+                 Height="300"
+                 Width="300"
+                 MinWidth="300"
+                 MinHeight="300">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome UseAeroCaptionButtons="False"
-                      CaptionHeight="0"
-                      NonClientFrameEdges="None" />
+    <DockPanel>
 
-    </WindowChrome.WindowChrome>
-
-    <Border Background="White">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="30"
-                              ShadowDepth="5"
-                              Color="#969696" />
-
-        </Border.Effect>
+        <ui:TitleBar DockPanel.Dock="Top"
+                     ShowMaximize="False"
+                     Title="{Binding RelativeSource={RelativeSource AncestorType=ui:FluentWindow}, Path=Title, Mode=OneWay}" />
 
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="35" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
 
-            <Grid>
+            <ContentControl Content="{Binding Content}" />
+            <ui:SnackbarPresenter x:Name="RootSnackbar" />
 
-                <TextBlock Text="NoSleepHD"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="15" />
-
-                <Button HorizontalAlignment="Left"
-                        Command="{Binding OnButtonCommand}"
-                        CommandParameter="TopSetting"
-                        Style="{StaticResource IconButtonsStyle}"
-                        Content="{StaticResource setting}" />
-
-                <StackPanel HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-
-                    <Button Command="{Binding OnButtonCommand}"
-                            CommandParameter="TopMini"
-                            Style="{StaticResource IconButtonsStyle}"
-                            Content="{StaticResource minimize}" />
-
-                    <Button Command="{Binding OnButtonCommand}"
-                            CommandParameter="TopClose"
-                            Style="{StaticResource exitButtonStyle}"
-                            Content="{StaticResource close}" />
-
-                </StackPanel>
-
-            </Grid>
-
-            <ContentControl Content="{Binding Content}"
-                            Grid.Row="1" />
         </Grid>
 
-    </Border>
+    </DockPanel>
 
-</Window>
+</ui:FluentWindow>

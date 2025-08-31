@@ -14,10 +14,12 @@ namespace NoSleepHD.Core.Manager
             return TryToOpen(MainGlobal.AppCorePath, "Nothing");
         }
 
-        public static void OpenMain()
+        public static bool OpenMain()
         {
             if (!IsMainRunningAndActivate())
-                TryToOpen(MainGlobal.AppPath, string.Empty);
+                return TryToOpen(MainGlobal.AppPath, string.Empty);
+
+            return true;
         }
 
         public static void CloseCore()

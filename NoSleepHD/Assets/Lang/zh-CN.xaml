@@ -21,6 +21,8 @@
     <s:String x:Key="text_start_time">开始时间</s:String>
     <s:String x:Key="text_end_time">结束时间</s:String>
 
+    <s:String x:Key="text_interval">间隔时间(s)</s:String>
+
     <s:String x:Key="text_back">返回</s:String>
     <s:String x:Key="text_language">语言</s:String>
 

@@ -21,6 +21,8 @@
     <s:String x:Key="text_start_time">Start Time</s:String>
     <s:String x:Key="text_end_time">End Time</s:String>
 
+    <s:String x:Key="text_interval">Interval Time(s)</s:String>
+
     <s:String x:Key="text_back">Back</s:String>
     <s:String x:Key="text_language">Language</s:String>
 

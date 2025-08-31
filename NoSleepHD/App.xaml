@@ -1,11 +1,14 @@
 ﻿<Application x:Class="NoSleepHD.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Assets/Styles/Light.xaml" />
+                <ui:ThemesDictionary Theme="Unknown" />
+                <ui:ControlsDictionary />
+
                 <ResourceDictionary Source="Assets/Lang/zh-CN.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

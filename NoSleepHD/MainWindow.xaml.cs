@@ -1,33 +1,22 @@
-﻿using NoSleepHD.Interface;
-using NoSleepHD.ViewModel;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
+﻿using NoSleepHD.ViewModel;
+using Wpf.Ui;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 
 namespace NoSleepHD
 {
-    public partial class MainWindow : Window, IMainWindow
+    public partial class MainWindow : FluentWindow
     {
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new WindowViewModel(this);
-        }
 
-        public void Minimize()
-        {
-            WindowState = WindowState.Minimized;
-        }
+            SystemThemeWatcher.Watch(this);
 
-        private void DragMove(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
+            SnackbarService snackbarService = new SnackbarService();
+            snackbarService.SetSnackbarPresenter(RootSnackbar);
 
-        // Cancel Close
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
+            DataContext = new WindowViewModel(snackbarService);
         }
     }
 }

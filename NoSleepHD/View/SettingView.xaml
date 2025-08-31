@@ -3,87 +3,114 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="400">
+             d:DesignWidth="300">
 
-    <StackPanel Orientation="Vertical">
-        
-        <Grid Margin="10">
-            <TextBlock Text="{DynamicResource text_startup}"
-                       VerticalAlignment="Center" />
+    <DockPanel>
 
-            <CheckBox Style="{StaticResource CheckedBox}"
-                      HorizontalAlignment="Right"
-                      IsChecked="{Binding onStartup}" />
+        <Grid DockPanel.Dock="Bottom">
+
+            <Separator VerticalAlignment="Top" />
+
+            <Button HorizontalAlignment="Center"
+                    Content="{DynamicResource text_back}"
+                    Command="{Binding ButtonCommand}"
+                    CommandParameter="BackToMain"
+                    Margin="20"
+                    Width="150"/>
+
         </Grid>
 
-        <Grid Margin="10">
-            <TextBlock Text="{DynamicResource text_timing}"
-                       VerticalAlignment="Center" />
+        <ScrollViewer Margin="5">
 
-            <CheckBox Style="{StaticResource CheckedBox}"
-                      HorizontalAlignment="Right"
-                      IsChecked="{Binding onTiming}" />
-        </Grid>
+            <StackPanel Orientation="Vertical">
 
-        <Grid Margin="10">
+                <Grid Margin="10">
 
-            <TextBlock Text="{DynamicResource text_start_time}" />
+                    <TextBlock Text="{DynamicResource text_startup}"
+                               VerticalAlignment="Center" />
 
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right">
+                    <CheckBox HorizontalAlignment="Right"
+                              IsChecked="{Binding OnStartup}" />
+                </Grid>
 
-                <ComboBox Width="50"
-                          ItemsSource="{Binding Hour}"
-                          SelectedValue="{Binding StartHour}" />
+                <Grid Margin="10">
 
-                <ComboBox Width="50"
-                          ItemsSource="{Binding Minute}"
-                          SelectedValue="{Binding StartMinute}"
-                          Margin="5 0" />
+                    <TextBlock Text="{DynamicResource text_timing}"
+                               VerticalAlignment="Center" />
+
+                    <CheckBox HorizontalAlignment="Right"
+                              IsChecked="{Binding OnTiming}" />
+                </Grid>
+
+                <Grid Margin="10">
+
+                    <TextBlock Text="{DynamicResource text_start_time}"
+                               VerticalAlignment="Center" />
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+
+                        <ComboBox ItemsSource="{Binding Hour}"
+                                  SelectedValue="{Binding StartHour}"/>
+
+                        <ComboBox ItemsSource="{Binding Minute}"
+                                  SelectedValue="{Binding StartMinute}"
+                                  Margin="5 0" />
+
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="10">
+
+                    <TextBlock Text="{DynamicResource text_end_time}"
+                               VerticalAlignment="Center" />
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+
+                        <ComboBox ItemsSource="{Binding Hour}"
+                                  SelectedValue="{Binding EndHour}" />
+
+                        <ComboBox ItemsSource="{Binding Minute}"
+                                  SelectedValue="{Binding EndMinute}"
+                                  Margin="5 0" />
+
+                    </StackPanel>
+
+                </Grid>
+
+                <Grid Margin="10">
+
+                    <TextBlock Text="{DynamicResource text_language}"
+                               VerticalAlignment="Center" />
+
+                    <ComboBox Width="110"
+                              HorizontalAlignment="Right"
+                              DisplayMemberPath="LanguageText"
+                              ItemsSource="{Binding Languages}"
+                              SelectedItem="{Binding Language}" />
+
+                </Grid>
+
+                <Grid Margin="10">
+
+                    <TextBlock Text="{DynamicResource text_interval}"
+                               VerticalAlignment="Center" />
+
+                    <ui:NumberBox Width="110"
+                                  SpinButtonPlacementMode="Hidden"
+                                  HorizontalAlignment="Right" 
+                                  Value="{Binding Interval, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
 
             </StackPanel>
-        </Grid>
 
-        <Grid Margin="10">
+        </ScrollViewer>
 
-            <TextBlock Text="{DynamicResource text_end_time}" />
-
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-
-                <ComboBox Width="50"
-                          ItemsSource="{Binding Hour}"
-                          SelectedValue="{Binding EndHour}" />
-
-                <ComboBox Width="50"
-                          ItemsSource="{Binding Minute}"
-                          SelectedValue="{Binding EndMinute}"
-                          Margin="5 0" />
-
-            </StackPanel>
-
-        </Grid>
-
-        <Grid Margin="10">
-
-            <TextBlock Text="{DynamicResource text_language}" />
-
-            <ComboBox Width="110"
-                      HorizontalAlignment="Right"
-                      DisplayMemberPath="LanguageText"
-                      ItemsSource="{Binding Languages}"
-                      SelectedItem="{Binding Language}"/>
-
-        </Grid>
-
-        <Button Content="{DynamicResource text_back}"
-                Style="{StaticResource longButtonStyle}"
-                Command="{Binding OnButtonCommand}"
-                CommandParameter="BackToMain"
-                Margin="0,10,0,0" />
-
-    </StackPanel>
+    </DockPanel>
 
 </UserControl>

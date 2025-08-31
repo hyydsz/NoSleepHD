@@ -3,71 +3,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:NoSleepHD.View"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
              d:DesignHeight="400"
              d:DesignWidth="400">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+
+        <Grid DockPanel.Dock="Bottom">
+
+            <Button Content="{ui:SymbolIcon Symbol=Settings16}"
+                    Command="{Binding ButtonCommand}"
+                    CommandParameter="Setting"
+                    HorizontalAlignment="Left"
+                    Margin="15 0" />
+
+            <Button Width="150"
+                    Margin="20"
+                    HorizontalAlignment="Center"
+                    Command="{Binding ButtonCommand}"
+                    CommandParameter="Switch">
+
+                <Button.Style>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource DefaultButtonStyle}">
+
+                        <Setter Property="Content"
+                                Value="{DynamicResource text_nosleep_start}" />
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsStarted}"
+                                         Value="True">
+
+                                <Setter Property="Content"
+                                        Value="{DynamicResource text_nosleep_stop}" />
+
+                            </DataTrigger>
+                        </Style.Triggers>
+
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </Grid>
 
         <Grid>
+
             <Separator VerticalAlignment="Top" />
 
-            <ScrollViewer Margin="5"
+            <ScrollViewer Margin="10"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
 
-                <ItemsControl BorderThickness="0 1 0 1"
-                              ItemsSource="{Binding DiskLists}">
-
+                <ItemsControl ItemsSource="{Binding DiskLists}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Style="{StaticResource CheckedBox}"
-                                      Command="{Binding DataContext.OnDiskButtonCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                      CommandParameter="{Binding}"
-                                      IsChecked="{Binding IsChecked}"
-                                      Content="{Binding Path}"
-                                      Margin="5" />
-                            
+                            <ToggleButton Command="{Binding DataContext.DiskButtonCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                          CommandParameter="{Binding}"
+                                          IsChecked="{Binding IsChecked}"
+                                          Content="{Binding Path}"
+                                          Margin="5"/>
+
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                 </ItemsControl>
 
             </ScrollViewer>
 
             <Separator VerticalAlignment="Bottom" />
+
         </Grid>
 
-        <Button Width="150"
-                Grid.Row="1"
-                Margin="10"
-                Command="{Binding OnButtonCommand}"
-                CommandParameter="Switch">
-
-            <Button.Style>
-                <Style TargetType="Button"
-                       BasedOn="{StaticResource longButtonStyle}">
-                    
-                    <Setter Property="Content"
-                            Value="{DynamicResource text_nosleep_start}" />
-
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsStarted}"
-                                     Value="True">
-
-                            <Setter Property="Content"
-                                    Value="{DynamicResource text_nosleep_stop}" />
-                            
-                        </DataTrigger>
-                    </Style.Triggers>
-
-                </Style>
-            </Button.Style>
-        </Button>
-    </Grid>
+    </DockPanel>
 
 </UserControl>

@@ -10,6 +10,13 @@ namespace NoSleepHD
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (!PrivilegeManager.IsAdmin())
+            {
+                PrivilegeManager.RunAsAdmin();
+                Shutdown();
+                return;
+            }
+
             _mutex = new Mutex(true, "NoSleepHD", out bool createdNew);
             if (!createdNew)
             {

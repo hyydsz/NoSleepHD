@@ -18,15 +18,14 @@ namespace NoSleepHD.Core
         private void LoadLanguage()
         {
             LanguageModel language = LanguageCoreManager.Language;
+
             OpenToolStripMenuItem.Text = language.NotifyOpenText;
             CloseToolStripMenuItem.Text = language.NotifyCloseText;
         }
 
         private void LoadRegistry()
         {
-            // Default 2.5 Minutes
-            object interval = MainGlobal.NoSleepHDReg.GetValue("Interval", 2.5 * 60 * 1000);
-            readTimer.Interval = Convert.ToInt32(interval);
+            readTimer.Interval = MainGlobal.Interval * 1000;
         }
 
         private void readTimer_Tick(object sender, EventArgs e)
@@ -85,14 +84,21 @@ namespace NoSleepHD.Core
             }
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        private void OpenToolStripClick(object sender, EventArgs e)
         {
-            readTimer.Stop();
-            timingTimer.Stop();
+            CoreManager.OpenMain();
+        }
+
+        private void CloseToolStripClick(object sender, EventArgs e)
+        {
+            CoreManager.CloseMain();
+            Application.Exit();
         }
 
         protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             Hide();
         }
 
@@ -107,15 +113,10 @@ namespace NoSleepHD.Core
             timingTimer.Start();
         }
 
-        private void OpenToolStripClick(object sender, EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            CoreManager.OpenMain();
-        }
-
-        private void CloseToolStripClick(object sender, EventArgs e)
-        {
-            CoreManager.CloseMain();
-            Application.Exit();
+            readTimer.Stop();
+            timingTimer.Stop();
         }
     }
 }
